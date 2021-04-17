@@ -37,12 +37,9 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render("error");
 });
-
-const CONNECTION_URL =
-    "mongodb+srv://WeConnect:WeConnect@cluster0.neu0f.mongodb.net/test";
 const PORT = process.env.PORT || 5000;
 mongoose
-    .connect(CONNECTION_URL, {
+    .connect(process.env.CONNECTION_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
