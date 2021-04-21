@@ -22,14 +22,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/", usersRouter);
 app.use("/spaces", spacesRouter);
+app.use("/",require("./routes/auth"));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
 });
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
