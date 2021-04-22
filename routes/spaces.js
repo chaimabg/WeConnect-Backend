@@ -10,6 +10,18 @@ router.get("/", async(req, res) => {
     }
 });
 
+router.get("/search/:q", async(req, res) => {
+    var q = req.params.q;
+    var regex = new RegExp("^" + q, "i");
+    try {
+        const spaces = await Space.find({ name: regex });
+        const spacesLoc = await Space.find({ location: regex });
+        res.status(200).json(spaces.concat(spacesLoc));
+    } catch (err) {
+        res.status(404).json({ message: err });
+    }
+});
+
 router.get("/:spaceId", async(req, res) => {
     try {
         const space = await Space.findById(req.params.spaceId);
