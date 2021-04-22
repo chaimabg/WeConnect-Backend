@@ -9,13 +9,13 @@ router.post('/signup',async(req,res)=>{
 
         try{
             if (usernameExist.length!==0 && emailExist.length!==0) {
-                return res.status(401).json({ error: 'Username and Email exist already !' });
+                return res.send({ error: 'Username and Email exist already !' });
             }
            if (usernameExist.length!==0) {
-                return res.status(401).json({ error: 'Username exists already !' });
+                return res.send({ error: 'Username exists already !' });
             }
             if (emailExist.length!==0) {
-                return res.status(401).json({ error: 'Email exists already !' });
+                return res.send({ error: 'Email exists already !' });
             }
            const hash=await bcrypt.hash(req.body.password, 10);
 

@@ -8,14 +8,16 @@ router.post('/login',async (req,res)=>{
     User.findOne({ username: req.body.username })
         .then(user => {
             if (!user) {
+                res.send({ error: 'User not found !' });
                 return res.status(401).json({ error: 'User not found !' });
             }
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
-                        return res.status(401).json({ error: 'Password incorrect !' });
+                        res.send({ error: 'Incorrect Password  !' });
+                        return res.status(401).json({ error: 'Incorrect Password  !' });
                     }
-                    res.status(200).json({
+                    res.send({
                         username: user.username,
                         email: user.email,
                         address: user.address,
