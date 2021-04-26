@@ -39,8 +39,28 @@ router.post('/signup',async(req,res)=>{
 
 router.put('/update/:id',async(req,res)=>{
 try {
-  await User.findByIdAndUpdate({_id : req.params.id},req.body);
-  res.send("updated");
+    let valid;
+    const user=await User.findById({_id : req.params.id});
+    await bcrypt.compare(req.body.password, user.password).then(v =>{
+        valid =v;
+    });
+
+        if (!valid) {
+            res.send({ error: 'Incorrect Password  !' });
+            return res.status(401).json({ error: 'Incorrect Password  !' });
+        }
+   const userUpdated={username : req.body.username,
+       email: req.body.email,
+       address:req.body.address,
+       phoneNumber:req.body.phone,
+       password:user.password
+   };
+
+        console.log(userUpdated);
+            await User.findByIdAndUpdate({_id : req.params.id},userUpdated);
+            res.send("updated");
+
+
 }catch (e) {
   res.status(404).json({ message: e });
 }
