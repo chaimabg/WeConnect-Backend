@@ -1,6 +1,33 @@
 var express = require("express");
 var router = express.Router();
+var multer = require("multer");
 const Space = require("../models/Space");
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, "./uploads");
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + file.originalname);
+    },
+});
+const fileFilter = (req, file, cb) => {
+    if (
+        file.mimetype === "image/jpeg" ||
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg"
+    ) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter: fileFilter,
+});
 router.get("/", async(req, res) => {
     try {
         const spaces = await Space.find();
@@ -12,7 +39,7 @@ router.get("/", async(req, res) => {
 
 router.get("/search/:q", async(req, res) => {
     var q = req.params.q;
-    var regex = new RegExp("^" + q, "i");
+    var regex = new RegExp(q, "i");
     try {
         const spaces = await Space.find({ name: regex });
         const spacesLoc = await Space.find({ location: regex });
@@ -31,12 +58,15 @@ router.get("/:spaceId", async(req, res) => {
     }
 });
 
-router.post("/", async(req, res) => {
+router.post("/", upload.single("pictures"), async(req, res) => {
+    console.log(req.file);
     const space = new Space({
         name: req.body.name,
         location: req.body.location,
         description: req.body.description,
-        pictures: req.body.pictures,
+        hourOpen: req.body.hourOpen,
+        hourClose: req.body.hourClose,
+        pictures: req.file.path,
     });
     try {
         const savedSpace = await space.save();
@@ -50,7 +80,14 @@ router.put("/", async(req, res) => {
     try {
         const updatedSpace = await Space.findByIdAndUpdate({ _id: req.body.spaceId },
 
-            req.body, { new: true }
+            {
+                name: req.body.name,
+                location: req.body.location,
+                description: req.body.description,
+                hourOpen: req.body.hourOpen,
+                hourClose: req.body.hourClose,
+                pictures: req.file.path,
+            }, { new: true }
         );
         res.status(200).json(updatedSpace);
     } catch (err) {
