@@ -65,4 +65,14 @@ try {
   res.status(404).json({ message: e });
 }
 });
+
+router.get('/userspaces/:id',async (req,res)=>{
+   try{
+       const user= User.findById({_id : req.params.id});
+       const spaces = user.workspaces;
+       res.status(200).json(spaces);
+  } catch (err) {
+       res.status(404).json({ message: err });
+  }
+});
 module.exports = router;
