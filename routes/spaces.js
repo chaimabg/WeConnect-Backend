@@ -66,7 +66,7 @@ router.post("/", upload.single("pictures"), async(req, res) => {
         description: req.body.description,
         hourOpen: req.body.hourOpen,
         hourClose: req.body.hourClose,
-        pictures: req.file.path,
+        pictures: "http://localhost:5000/" + req.file.path,
     });
     try {
         const savedSpace = await space.save();
@@ -76,7 +76,7 @@ router.post("/", upload.single("pictures"), async(req, res) => {
     }
 });
 
-router.put("/", async(req, res) => {
+router.put("/", upload.single("pictures"), async(req, res) => {
     try {
         const updatedSpace = await Space.findByIdAndUpdate({ _id: req.body.spaceId },
 
@@ -86,8 +86,8 @@ router.put("/", async(req, res) => {
                 description: req.body.description,
                 hourOpen: req.body.hourOpen,
                 hourClose: req.body.hourClose,
-                pictures: req.file.path,
-            }, { new: true }
+                pictures: "http://localhost:5000/" + req.file.path,
+            }
         );
         res.status(200).json(updatedSpace);
     } catch (err) {
