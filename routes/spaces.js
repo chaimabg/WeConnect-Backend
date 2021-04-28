@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 const Space = require("../models/Space");
+const User = require("../models/User");
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, "./uploads");
@@ -70,6 +71,11 @@ router.post("/", upload.single("pictures"), async(req, res) => {
     });
     try {
         const savedSpace = await space.save();
+        const up = await User.findByIdAndUpdate({ _id: req.body.userId }, {
+            $push: {
+                workspaces: savedSpace._id,
+            },
+        });
         res.status(200).json(savedSpace);
     } catch (err) {
         res.status(404).json({ message: err });
