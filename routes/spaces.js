@@ -73,7 +73,7 @@ router.post("/", upload.single("pictures"), async(req, res) => {
         const savedSpace = await space.save();
         const up = await User.findByIdAndUpdate({ _id: req.body.userId }, {
             $push: {
-                workspaces: savedSpace._id,
+                workspaces: savedSpace,
             },
         });
         res.status(200).json(savedSpace);

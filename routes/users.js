@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 var express = require('express');
 var router = express.Router();
 var User = require('../models/User');
+var Space = require('../models/Space');
 
 router.post('/signup',async(req,res)=>{
     const emailExist= await User.find({ email: req.body.email });
@@ -37,10 +38,11 @@ router.post('/signup',async(req,res)=>{
 
 });
 
-router.put('/update/:id',async(req,res)=>{
+router.put('/update',async(req,res)=>{
 try {
     let valid;
-    const user=await User.findById({_id : req.params.id});
+    const user=await User.findOne({_id : req.body._id});
+    console.log(user);
     await bcrypt.compare(req.body.password, user.password).then(v =>{
         valid =v;
     });
@@ -53,12 +55,14 @@ try {
        email: req.body.email,
        address:req.body.address,
        phoneNumber:req.body.phone,
-       password:user.password
+       password:user.password,
+       workspaces: user.workspaces
    };
 
         console.log(userUpdated);
-            await User.findByIdAndUpdate({_id : req.params.id},userUpdated);
-            res.send("updated");
+        console.log(req.body._id);
+           var update= await User.findByIdAndUpdate({_id : req.body._id},userUpdated);
+            res.send(userUpdated);
 
 
 }catch (e) {
@@ -68,9 +72,9 @@ try {
 
 router.get('/userspaces/:id',async (req,res)=>{
    try{
-       const user= User.findById({_id : req.params.id});
-       const spaces = user.workspaces;
-       res.status(200).json(spaces);
+       const user= await User.findById({_id : req.params.id});
+       const spaces = await Space.find({_id: {$in: user.workspaces}});
+       res.send(spaces);
   } catch (err) {
        res.status(404).json({ message: err });
   }
