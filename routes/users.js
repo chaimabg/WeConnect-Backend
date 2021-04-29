@@ -72,7 +72,7 @@ try {
 
 router.get('/userspaces/:id',async (req,res)=>{
    try{
-       const user= await User.findById({_id : req.params.id});
+       const user= await User.findById({_id : req.params._id});
        const spaces = await Space.find({_id: {$in: user.workspaces}});
        res.send(spaces);
   } catch (err) {
