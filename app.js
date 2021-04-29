@@ -19,6 +19,9 @@ app.use(cors());
 app.use("/", usersRouter);
 app.use("/spaces", spacesRouter);
 app.use("/", require("./routes/auth"));
+
+app.use("/uploads", express.static("uploads"));
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
