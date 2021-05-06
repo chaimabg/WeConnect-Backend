@@ -59,18 +59,19 @@ router.get("/:spaceId", async (req, res) => {
   }
 });
 
-router.post("/", upload.single("pictures"), async (req, res) => {
-  console.log(req.file);
+router.post("/" /*, upload.single("pictures"),*/, async (req, res) => {
   const space = new Space({
     name: req.body.name,
     location: req.body.location,
     description: req.body.description,
     hourOpen: req.body.hourOpen,
     hourClose: req.body.hourClose,
-    pictures: "http://localhost:5000/" + req.file.path,
+    pictures: "http://localhost:5000/",
   });
   try {
+    console.log("1");
     const savedSpace = await space.save();
+    console.log("2");
     const up = await User.findByIdAndUpdate(
       { _id: req.body.userId },
       {
