@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var multer = require("multer");
 const { Space } = require("../models/Space");
+
 const { User } = require("../models/User");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -22,6 +23,7 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 };
+
 const upload = multer({
   storage: storage,
   limits: {
@@ -59,19 +61,22 @@ router.get("/:spaceId", async (req, res) => {
   }
 });
 
-router.post("/" /*, upload.single("pictures"),*/, async (req, res) => {
-  const space = new Space({
-    name: req.body.name,
-    location: req.body.location,
-    description: req.body.description,
-    hourOpen: req.body.hourOpen,
-    hourClose: req.body.hourClose,
-    pictures: "http://localhost:5000/",
-  });
+router.post("/", upload.single("pictures"), async (req, res) => {
+  console.log(req.file);
   try {
-    console.log("1");
+    const { name, location, description, hourOpen, hourClose } = req.body;
+    const { path } = req.file;
+    const space = new Space({
+      name: name,
+      location: location,
+      description: description,
+      hourOpen: hourOpen,
+      hourClose: hourClose,
+      pictures: "http://localhost:5000/" + path,
+    });
+    console.log(space);
     const savedSpace = await space.save();
-    console.log("2");
+    console.log(savedSpace);
     const up = await User.findByIdAndUpdate(
       { _id: req.body.userId },
       {
