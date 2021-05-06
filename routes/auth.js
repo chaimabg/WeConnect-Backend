@@ -1,35 +1,35 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var User = require('../models/User');
+var {User} = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt =require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-router.post('/login',async (req,res)=>{
-    User.findOne({ username: req.body.username })
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'User not found !' });
+router.post("/login", async(req, res) => {
+    try {
+        let user = await User.findOne({ username: req.body.username });
+        if (!user) {
+            res.send({ error: "User not found !" });
+            return null;
+        } else {
+            if (await bcrypt.compare(req.body.password, user.password)) {
+                res.send({
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    address: user.address,
+                    phoneNumber: user.phoneNumber,
+                    token: jwt.sign({ userId: user._id }, "TOKEN_KEY", {
+                        expiresIn: "24h",
+                    }),
+                });
+            } else {
+                res.send({ error: "Incorrect Password  !" });
             }
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'Password incorrect !' });
-                    }
-                    res.status(200).json({
-                        username: user.username,
-                        email: user.email,
-                        address: user.address,
-                        phoneNumber:user.phoneNumber,
-                        token:  jwt.sign(
-                            { userId: user._id },
-                            'TOKEN_KEY',
-                            { expiresIn: '24h' }
-                        )
-                    });
-
-                })
-                .catch(error => res.status(500).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
+        }
+    } catch (e) {
+        console.log(e);
+        res.send(e);
+    }
 });
+
 module.exports = router;

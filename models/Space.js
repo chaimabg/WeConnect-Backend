@@ -18,5 +18,5 @@ const spaceSchema = mongoose.Schema({
         default: Date.now,
     },
 });
-
-module.exports = mongoose.model("Space", spaceSchema);
+const Space =mongoose.model("Space", spaceSchema);
+exports.Space =  Space;
