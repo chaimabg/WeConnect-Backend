@@ -45,12 +45,23 @@ router.put("/:sold", async(req, res) => {
             cardNumber: req.body.cardNumber,
         });
         console.log(paymentInfo);
+        if (paymentInfo.nameOnCard != req.body.nameOnCard) {
+            return res.status(400).json({ error: "Incorrect Name On Card" });
+        }
+        if (paymentInfo.cvc != req.body.cvc) {
+            return res.status(400).json({ error: "Incorrect cvc" });
+        }
+        if (paymentInfo.mm != req.body.mm) {
+            return res.status(400).json({ error: "Incorrect mm" });
+        }
+        if (paymentInfo.yyyy != req.body.yyyy) {
+            return res.status(400).json({ error: "Incorrect yyyy" });
+        }
+        if (paymentInfo.sold < req.params.sold) {
+            return res.status(400).json({ error: "Insufficient Sold in your card" });
+        }
         const paymentInfoUpdated = await PaymentInfo.findOneAndUpdate({
             cardNumber: req.body.cardNumber,
-            nameOnCard: req.body.nameOnCard,
-            cvc: req.body.cvc,
-            mm: req.body.mm,
-            yyyy: req.body.yyyy,
         }, {
             cardNumber: req.body.cardNumber,
             nameOnCard: req.body.nameOnCard,
