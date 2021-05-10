@@ -7,8 +7,8 @@ var mongoose = require("mongoose");
 
 var usersRouter = require("./routes/users");
 var spacesRouter = require("./routes/spaces");
+var reviewsRouter = require("./routes/reviews");
 var paymentInfoRouter = require("./routes/paymentInfo");
-
 var app = express();
 dotenv.config();
 
@@ -16,12 +16,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
+
 app.use("/user", usersRouter);
 app.use("/spaces", spacesRouter);
 app.use("/paymentInfo", paymentInfoRouter);
 app.use("/updateSpace", updateSpace);
 app.use("/", require("./routes/auth"));
-
+app.use("/review",reviewsRouter);
 app.use("/uploads", express.static("uploads"));
 
 // catch 404 and forward to error handler
