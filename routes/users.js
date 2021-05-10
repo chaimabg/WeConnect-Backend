@@ -6,6 +6,7 @@ var { Space } = require("../models/Space");
 
 router.post("/signup", async (req, res) => {
   
+  
   const emailExist = await User.find({ email: req.body.email });
   console.log(emailExist);
   const usernameExist = await User.find({ username: req.body.username });
