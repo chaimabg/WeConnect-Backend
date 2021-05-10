@@ -1,11 +1,10 @@
-var createError = require("http-errors");
 var express = require("express");
 var cors = require("cors");
-var path = require("path");
 
+var updateSpace = require("./routes/UpdateSpace");
 var dotenv = require("dotenv");
 var mongoose = require("mongoose");
-var indexRouter = require("./routes/index");
+
 var usersRouter = require("./routes/users");
 var spacesRouter = require("./routes/spaces");
 var paymentInfoRouter = require("./routes/paymentInfo");
@@ -20,6 +19,7 @@ app.use(cors());
 app.use("/user", usersRouter);
 app.use("/spaces", spacesRouter);
 app.use("/paymentInfo", paymentInfoRouter);
+app.use("/updateSpace", updateSpace);
 app.use("/", require("./routes/auth"));
 
 app.use("/uploads", express.static("uploads"));

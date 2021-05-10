@@ -55,6 +55,7 @@ router.get("/search/:q", async(req, res) => {
 router.get("/:spaceId", async(req, res) => {
     try {
         const space = await Space.findById(req.params.spaceId);
+
         res.status(200).json(space);
     } catch (err) {
         res.status(404).json({ message: err });
@@ -74,9 +75,8 @@ router.post("/", upload.single("pictures"), async(req, res) => {
             hourClose: hourClose,
             pictures: "http://localhost:5000/" + path,
         });
-        console.log(space);
+
         const savedSpace = await space.save();
-        console.log(savedSpace);
 
         const up = await User.findByIdAndUpdate({ _id: req.body.userId }, {
             $push: {
@@ -88,23 +88,15 @@ router.post("/", upload.single("pictures"), async(req, res) => {
         res.status(404).json({ message: err });
     }
 });
-
 router.put("/", upload.single("pictures"), async(req, res) => {
+    const { path } = req.file;
+    console.log(req.body._id);
     try {
-        const updatedSpace = await Space.findByIdAndUpdate({ _id: req.body.spaceId },
-
-            {
-                name: req.body.name,
-                location: req.body.location,
-                description: req.body.description,
-                hourOpen: req.body.hourOpen,
-                hourClose: req.body.hourClose,
-                pictures: "http://localhost:5000/" + req.file.path,
-            }
-        );
-        res.status(200).json(updatedSpace);
-    } catch (err) {
-        res.status(404).json({ message: err });
+        const space = await Space.update({ _id: req.body._id }, { $push: { pictures: "http://localhost:5000/" + path } });
+        console.log(space);
+        res.send(space);
+    } catch (e) {
+        res.send(e);
     }
 });
 
