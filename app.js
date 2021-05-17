@@ -6,6 +6,7 @@ var dotenv = require("dotenv");
 var mongoose = require("mongoose");
 
 var usersRouter = require("./routes/users");
+var reservationsRouter = require("./routes/reservations");
 var spacesRouter = require("./routes/spaces");
 var app = express();
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use("/user", usersRouter);
 app.use("/spaces", spacesRouter);
+app.use("/reservations", reservationsRouter);
 app.use("/updateSpace", updateSpace);
 app.use("/", require("./routes/auth"));
 
