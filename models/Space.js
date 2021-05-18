@@ -19,6 +19,9 @@ const spaceSchema = new mongoose.Schema({
     type: Date,
   },
   pictures: [String],
+  capacity :{
+     type : Number
+  },
   joined: {
     type: Date,
     default: Date.now,

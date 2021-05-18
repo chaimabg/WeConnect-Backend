@@ -59,11 +59,11 @@ router.get("/:spaceId", async (req, res) => {
     const space = await Space.findById(req.params.spaceId);
 
 
+
     res.status(200).json(space);
   } catch (err) {
     res.status(404).json({ message: err });
   }
-
 });
 
 router.post("/", upload.single("pictures"), async (req, res) => {
@@ -117,7 +117,15 @@ router.delete("/:spaceId", async (req, res) => {
     res.status(200).json(removedSpace);
   } catch (err) {
     res.status(404).json({ message: err });
-  }
+  }});
 
+
+router.delete("/:spaceId", async (req, res) => {
+  try {
+    const removedSpace = await Space.remove({ _id: req.params.spaceId });
+    res.status(200).json(removedSpace);
+  } catch (err) {
+    res.status(404).json({ message: err });
+  }
 });
 module.exports = router;

@@ -106,7 +106,8 @@ try {
     if (! user){
         res.send({error: "User not found !"});
     }
-    res.send(user._id);
+    res.send({_id :user._id});
+
 }catch (e) {
     res.status(404).json({error: e})
 }
@@ -118,7 +119,8 @@ router.put("/resetPassword",async (req,res)=>{
    const userId= req.body._id;
    const pass = await bcrypt.hash(req.body.password, 10);
    const update = await User.findByIdAndUpdate({ _id: userId }, {password : pass});
-   res.send("Your password has been successfully reset ");
+   res.send({sucess : "Your password has been successfully reset "});
+
  }catch(e){
    res.status(404).json({error : e});
  }
@@ -170,4 +172,3 @@ try{
 }
 });
 module.exports = router;
-
