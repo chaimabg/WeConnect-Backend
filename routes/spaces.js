@@ -52,6 +52,30 @@ router.get("/search/:q", async(req, res) => {
     }
 });
 
+router.get("/filter", async(req, res) => {
+    try {
+        const spaces = await Space.find();
+        var filters = req.query;
+        console.log(filters);
+        const filteredSpaces = spaces.filter((space) => {
+            let isValid = true;
+            for (key in filters) {
+                if (key == "hourOpen" || key == "hourClose") {
+                    isValid =
+                        isValid && space[key].toString().substring(16, 21) == filters[key];
+                } else {
+                    isValid =
+                        isValid && space[key].toLowerCase == filters[key].toLowerCase;
+                }
+            }
+            return isValid;
+        });
+        res.status(200).json(filteredSpaces);
+    } catch (err) {
+        res.status(404).json({ message: err });
+    }
+});
+
 router.get("/:spaceId", async(req, res) => {
     try {
         const space = await Space.findById(req.params.spaceId);
@@ -92,7 +116,7 @@ router.put("/", upload.single("pictures"), async(req, res) => {
     const { path } = req.file;
     console.log(req.body._id);
     try {
-        const space = await Space.update({ _id: req.body._id }, { $push: { pictures: "http://localhost:5000/" + path } });
+        const space = await Space.updateOne({ _id: req.body._id }, { $push: { pictures: "http://localhost:5000/" + path } });
         console.log(space);
         res.send(space);
     } catch (e) {
