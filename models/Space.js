@@ -26,6 +26,18 @@ const spaceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  rating:{
+    type : Number,
+    default: 0,
+  },
+  sumRating:{
+    type : Number,
+    default: 0 ,
+  },
+  sumClient: {
+    type : Number ,
+    default: 0,
+  }
 });
 const Space = mongoose.model("Space", spaceSchema);
 exports.Space = Space;

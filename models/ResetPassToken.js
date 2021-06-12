@@ -14,7 +14,7 @@ const resetPassTokenSchema =  mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now,
-        expires: 18000
+        expires: 300
     },
 });
 const ResetPassToken = mongoose.model("ResetToken" ,resetPassTokenSchema );

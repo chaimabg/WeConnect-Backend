@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var {Review}= require("../models/Review");
-
+var {Space}= require("../models/Space");
 router.post("/addReview", async(req,res) => {
     try {
         const {name , email , rating , review, workspace}= req.body;
@@ -12,6 +12,15 @@ router.post("/addReview", async(req,res) => {
             review : review,
             workspace : workspace,
         });
+        var space = await Space.findOne( {_id :workspace});
+        var sc =space.sumClient +1;
+        var sr =space.sumRating+ rating;
+        var spaceUpdated = await Space.findByIdAndUpdate({_id :workspace},{
+            sumClient : sc,
+            sumRating : sr,
+            rating : sr/sc
+        } );
+
         var rev = await data.save();
         res.send(rev);
     }catch (e) {
