@@ -65,7 +65,7 @@ router.get("/filter", async(req, res) => {
                         isValid && space[key].toString().substring(16, 21) == filters[key];
                 } else {
                     isValid =
-                        isValid && space[key].toLowerCase == filters[key].toLowerCase;
+                        isValid && space[key].toLowerCase() == filters[key].toLowerCase();
                 }
             }
             return isValid;
