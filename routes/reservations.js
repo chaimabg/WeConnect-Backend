@@ -24,26 +24,34 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.post("/reserv", async (req, res) => {
+  const { id, date } = req.body;
+  console.log(req.body);
   try {
-    var reserv = await Reservation.find({ spaceId: req.params.id });
-    console.log(reserv);
-    var somme = 0 ;
-    reserv.forEach(item =>{ somme = somme + item.guests});
-    const spaces = await Space.findOne({_id :req.params.id});
+    var somme = 0;
+    var reserv = await Reservation.find({ spaceId: id, date: date });
+
+    reserv.forEach((item) => {
+      somme = somme + item.guests;
+    });
+    var boo = false;
+    if (reserv.length != 0) {
+      boo = reserv[0].AllSpace;
+    }
+    console.log(id);
+    const spaces = await Space.findOne({ _id: id });
     console.log(spaces);
     var tab = [
       {
         capacity: spaces.capacity,
         exists: somme,
+        reserved: boo,
       },
     ];
     console.log(tab);
     res.send(tab);
-
   } catch (e) {
     console.log("eee", e);
   }
-
 });
 module.exports = router;
