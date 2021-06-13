@@ -8,6 +8,7 @@ var mongoose = require("mongoose");
 var usersRouter = require("./routes/users");
 var reservationsRouter = require("./routes/reservations");
 var spacesRouter = require("./routes/spaces");
+var eventsRouter = require("./routes/events");
 var reviewsRouter = require("./routes/reviews");
 var paymentInfoRouter = require("./routes/paymentInfo");
 var app = express();
@@ -20,6 +21,7 @@ app.use(cors());
 
 app.use("/user", usersRouter);
 app.use("/spaces", spacesRouter);
+app.use("/events", eventsRouter);
 app.use("/paymentInfo", paymentInfoRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/updateSpace", updateSpace);
