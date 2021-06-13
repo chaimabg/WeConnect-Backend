@@ -120,12 +120,4 @@ router.delete("/:spaceId", async (req, res) => {
   }});
 
 
-router.delete("/:spaceId", async (req, res) => {
-  try {
-    const removedSpace = await Space.remove({ _id: req.params.spaceId });
-    res.status(200).json(removedSpace);
-  } catch (err) {
-    res.status(404).json({ message: err });
-  }
-});
 module.exports = router;

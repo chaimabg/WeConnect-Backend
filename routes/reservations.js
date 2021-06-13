@@ -2,11 +2,12 @@ var express = require("express");
 var router = express.Router();
 const { Reservation } = require("../models/Reservation");
 const { Space } = require("../models/Space");
-
+const Crypto = require("crypto");
 router.post("/", async (req, res) => {
   const { date, time, guests, NumberOfHours, AllSpace, spaceId } = req.body;
   console.log("boduyyyyyyyyyyy!!!!!!", req.body);
   try {
+    var identity = Crypto.randomBytes(9).toString("hex");
     const reservation = new Reservation({
       date,
       time,
@@ -14,7 +15,9 @@ router.post("/", async (req, res) => {
       NumberOfHours,
       AllSpace,
       spaceId,
+      identity,
     });
+
     const result = await reservation.save();
     console.log(result);
     res.send(result);
@@ -54,4 +57,27 @@ router.post("/reserv", async (req, res) => {
     console.log("eee", e);
   }
 });
+
+router.get("/:id", async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const reservations = await Reservation.find({ spaceId: req.params.id });
+    console.log("ok");
+    res.send(reservations);
+  } catch (err) {
+    res.status(404).json({ message: err });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const removedReservation = await Reservation.remove({ _id: req.params.id });
+    console.log("iikkk");
+    res.status(200).json(removedReservation);
+  } catch (err) {
+    res.status(404).json({ message: err });
+  }
+});
+
 module.exports = router;
