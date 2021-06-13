@@ -31,6 +31,7 @@ const upload = multer({
     },
     fileFilter: fileFilter,
 });
+
 router.get("/", async(req, res) => {
     try {
         const spaces = await Space.find();
@@ -95,6 +96,7 @@ router.post("/", upload.single("pictures"), async(req, res) => {
             longitudeMap,
             latitudeMap,
             description,
+            capacity,
             hourOpen,
             hourClose,
         } = req.body;
@@ -105,6 +107,7 @@ router.post("/", upload.single("pictures"), async(req, res) => {
             longitudeMap: longitudeMap,
             latitudeMap: latitudeMap,
             description: description,
+            capacity: capacity,
             hourOpen: hourOpen,
             hourClose: hourClose,
             pictures: "http://localhost:5000/" + path,
@@ -135,6 +138,18 @@ router.put("/", upload.single("pictures"), async(req, res) => {
     }
 });
 
+// router.put("/", upload.single("pictures"), async(req, res) => {
+//     const { path } = req.file;
+//     console.log(req.body._id);
+//     try {
+//         const space = await Space.update({ _id: req.body._id }, { $push: { pictures: "http://localhost:5000/" + path } });
+//         console.log(space);
+//         res.send(space);
+//     } catch (e) {
+//         res.send(e);
+//     }
+// });
+
 router.delete("/:spaceId", async(req, res) => {
     try {
         const removedSpace = await Space.remove({ _id: req.params.spaceId });
@@ -143,4 +158,5 @@ router.delete("/:spaceId", async(req, res) => {
         res.status(404).json({ message: err });
     }
 });
+
 module.exports = router;

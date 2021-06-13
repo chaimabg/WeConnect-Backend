@@ -21,7 +21,6 @@ router.post("/addReview", async(req,res) => {
 router.get("/",async (req,res)=>{
     try {
         const reviews = await Review.find();
-        console.log(reviews);
         res.send(reviews);
     }catch(e){
         res.status(404).json(e);

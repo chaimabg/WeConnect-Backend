@@ -25,6 +25,10 @@ const spaceSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+
+    capacity: {
+        type: Number,
+    },
 });
 const Space = mongoose.model("Space", spaceSchema);
 exports.Space = Space;
