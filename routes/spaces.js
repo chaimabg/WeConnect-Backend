@@ -89,16 +89,27 @@ router.get("/:spaceId", async(req, res) => {
 router.post("/", upload.single("pictures"), async(req, res) => {
     console.log(req.file);
     try {
-        const { name, location, description, hourOpen, hourClose } = req.body;
+        const {
+            name,
+            location,
+            longitudeMap,
+            latitudeMap,
+            description,
+            hourOpen,
+            hourClose,
+        } = req.body;
         const { path } = req.file;
         const space = new Space({
             name: name,
             location: location,
+            longitudeMap: longitudeMap,
+            latitudeMap: latitudeMap,
             description: description,
             hourOpen: hourOpen,
             hourClose: hourClose,
             pictures: "http://localhost:5000/" + path,
         });
+        console.log(space);
 
         const savedSpace = await space.save();
 
