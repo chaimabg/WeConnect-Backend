@@ -14,7 +14,7 @@ const reservationSchema = new mongoose.Schema({
     required: true,
   },
   spaceId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Space",
   },
   NumberOfHours: {

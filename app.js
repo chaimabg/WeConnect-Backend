@@ -26,7 +26,7 @@ app.use("/paymentInfo", paymentInfoRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/updateSpace", updateSpace);
 app.use("/", require("./routes/auth"));
-app.use("/review",reviewsRouter);
+app.use("/review", reviewsRouter);
 app.use("/uploads", express.static("uploads"));
 
 // catch 404 and forward to error handler
